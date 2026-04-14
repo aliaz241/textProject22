@@ -1,19 +1,20 @@
+
 import requests
-import json
 
-def send_to_rubika(text):
-    session = json.load(open("rubika_session.json"))
+RUBIKA_TOKEN = "YOUR_RUBIKA_BOT_TOKEN"
+CHAT_ID = "YOUR_CHAT_ID"
 
-    url = "https://messengerg2c169.iranlms.ir/"
+def send_message(text):
+    url = "https://bot.rubika.ir/v1/bot/sendMessage"
 
-    payload = {
-        "api_version": "5",
-        "method": "sendMessage",
-        "auth": session["auth"],
-        "data": {
-            "object_guid": session["object_guid"],
-            "text": text
-        }
+    headers = {
+        "Authorization": f"Bot {RUBIKA_TOKEN}",
+        "Content-Type": "application/json"
     }
 
-    requests.post(url, json=payload)
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": text
+    }
+
+    requests.post(url, json=payload, headers=headers)
