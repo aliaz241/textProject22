@@ -1,20 +1,19 @@
+# soroush.py
 import requests
 import json
 
-def send_to_rubika(text):
-    with open("rubika_session.json") as f:
-        session = json.load(f)
+def send_to_soroush(text):
+    session = json.load(open("soroush_session.json"))
 
-    url = "https://messengerg2c1.iranlms.ir/"
+    url = "https://sapp.ir/api/v1/messages/send"
 
     payload = {
-        "api_version": "5",
-        "method": "sendMessage",
-        "auth": session["auth"],
-        "data": {
-            "object_guid": "YOUR_GUID",
-            "text": text
-        }
+        "receiver": session["chat_id"],
+        "text": text
     }
 
-    requests.post(url, json=payload)
+    headers = {
+        "Authorization": f"Bearer {session['token']}"
+    }
+
+    requests.post(url, json=payload, headers=headers)
