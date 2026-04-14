@@ -1,6 +1,7 @@
 name: telegram-bot
 
 on:
+  workflow_dispatch:   # 👈 این مهمه (اجرا دستی)
   schedule:
     - cron: "0 * * * *"
 
