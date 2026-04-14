@@ -1,7 +1,7 @@
 import requests
 import json
 
-BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+BOT_TOKEN = "7810023171:AAGBtujYuGY0inhiSefujYOh2ONaPfLyb6w"
 
 CONFIG_FILE = "config.json"
 DATA_FILE = "data.json"
