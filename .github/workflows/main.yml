@@ -1,9 +1,9 @@
 name: telegram-to-rubika-bot
 
 on:
-  workflow_dispatch:   # 👈 این همون Start Flow هست
+  workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"  # هر 1 ساعت
+    - cron: "0 * * * *"
 
 jobs:
   run:
@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests telethon rubpy
+          pip install requests beautifulsoup4
 
       - name: 📥 Fetch Telegram messages
         env:
@@ -33,7 +33,17 @@ jobs:
         run: |
           python telegram_bot.py
 
+      - name: 📝 Print data.json content
+        run: |
+          echo "---- data.json ----"
+          cat data.json || echo "data.json not found"
+
+      - name: ❗ Check if data.json is empty
+        run: |
+          if [ ! -s data.json ]; then
+            echo "❗ ERROR: data.json is EMPTY!"
+            exit 1
+          fi
+
       - name: ⏱ Wait 5 seconds
         run: sleep 5
-
-      
