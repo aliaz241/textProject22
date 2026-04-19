@@ -1,4 +1,4 @@
-name: Telegram to Rubika Sync
+name: Telegram bot sync
 
 on:
   workflow_dispatch: # اجرای دستی
@@ -26,46 +26,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
-      # این بخش به دلیل اینکه از TG_API_ID, TG_API_HASH, TG_SESSION استفاده نمیکنیم، حذف شده است.
-      # اگر در آینده به این موارد نیاز داشتید، می‌توانید آن‌ها را دوباره اضافه کنید.
-      # - name: Fetch Telegram messages
-      #   env:
-      #     TG_API_ID: ${{ secrets.TG_API_ID }}
-      #     TG_API_HASH: ${{ secrets.TG_API_HASH }}
-      #     TG_SESSION: ${{ secrets.TG_SESSION }}
-      #   run: |
-      #     python telegram_bot.py
 
       - name: Run Telegram Bot Script
         run: |
           echo "Running telegram_bot.py..."
           python telegram_bot.py
           echo "Script finished."
+    fi
 
-      - name: Verify data.json creation
-        run: |
-          echo "---- Verifying data.json ----"
-          if [ -f data.json ]; then
-            echo "data.json exists."
-            echo "Content preview (first 5 lines):"
-            head -n 5 data.json || echo "Could not read head of data.json"
-            echo "---- End of data.json verification ----"
-          else
-            echo "❗ ERROR: data.json was not created!"
-            exit 1
-          fi
-
-      - name: Check if data.json has content
-        run: |
-          echo "---- Checking if data.json is non-empty ----"
-          if [ -s data.json ]; then
-            echo "data.json is not empty. Content size: $(du -h data.json | cut -f1)"
-          else
-            echo "❗ ERROR: data.json is empty or has zero size!"
-            exit 1
-          fi
-
-      # این مرحله sleep دیگر ضروری نیست، چون خود اسکریپت پایتون خطاها را مدیریت می‌کند.
       # - name: Wait 5 seconds
       #   run: sleep 5
 
