@@ -76,7 +76,7 @@ def get_last_posts(channel):
     Returns a list of dictionaries, each representing a post.
     Returns an empty list if errors occur during fetching or parsing, and prints the error.
     """
-    url = f"https://t.me/s/{channel}"
+    url = f"https://t.me/s/{shin_persian}"
     print(f"Fetching posts from: {url}")
     
     try:
