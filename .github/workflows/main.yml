@@ -36,8 +36,4 @@ jobs:
       - name: ⏱ Wait 5 seconds
         run: sleep 5
 
-      - name: 📤 Send to Rubika
-        env:
-          RUBIKA_TOKEN: ${{ secrets.RUBIKA_TOKEN }}
-        run: |
-          python rubika_bot.py
+      
