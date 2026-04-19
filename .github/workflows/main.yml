@@ -1,49 +1,73 @@
-name: telegram-to-rubika-bot
+name: Telegram to Rubika Sync
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # اجرای دستی
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 * * * *" # هر ساعت در دقیقه 0
 
 jobs:
-  run:
+  sync_messages:
     runs-on: ubuntu-latest
 
     steps:
       - name: 🚀 Start Flow
-        run: echo "Flow started manually or by schedule"
+        run: echo "Starting Telegram to Rubika message sync flow..."
 
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5 # استفاده از نسخه جدیدتر setup-python
         with:
           python-version: "3.10"
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
-      - name: 📥 Fetch Telegram messages
-        env:
-          TG_API_ID: ${{ secrets.TG_API_ID }}
-          TG_API_HASH: ${{ secrets.TG_API_HASH }}
-          TG_SESSION: ${{ secrets.TG_SESSION }}
+      # این بخش به دلیل اینکه از TG_API_ID, TG_API_HASH, TG_SESSION استفاده نمیکنیم، حذف شده است.
+      # اگر در آینده به این موارد نیاز داشتید، می‌توانید آن‌ها را دوباره اضافه کنید.
+      # - name: Fetch Telegram messages
+      #   env:
+      #     TG_API_ID: ${{ secrets.TG_API_ID }}
+      #     TG_API_HASH: ${{ secrets.TG_API_HASH }}
+      #     TG_SESSION: ${{ secrets.TG_SESSION }}
+      #   run: |
+      #     python telegram_bot.py
+
+      - name: Run Telegram Bot Script
         run: |
+          echo "Running telegram_bot.py..."
           python telegram_bot.py
+          echo "Script finished."
 
-      - name: 📝 Print data.json content
+      - name: Verify data.json creation
         run: |
-          echo "---- data.json ----"
-          cat data.json || echo "data.json not found"
-
-      - name: ❗ Check if data.json is empty
-        run: |
-          if [ ! -s data.json ]; then
-            echo "❗ ERROR: data.json is EMPTY!"
+          echo "---- Verifying data.json ----"
+          if [ -f data.json ]; then
+            echo "data.json exists."
+            echo "Content preview (first 5 lines):"
+            head -n 5 data.json || echo "Could not read head of data.json"
+            echo "---- End of data.json verification ----"
+          else
+            echo "❗ ERROR: data.json was not created!"
             exit 1
           fi
 
-      - name: ⏱ Wait 5 seconds
-        run: sleep 5
+      - name: Check if data.json has content
+        run: |
+          echo "---- Checking if data.json is non-empty ----"
+          if [ -s data.json ]; then
+            echo "data.json is not empty. Content size: $(du -h data.json | cut -f1)"
+          else
+            echo "❗ ERROR: data.json is empty or has zero size!"
+            exit 1
+          fi
+
+      # این مرحله sleep دیگر ضروری نیست، چون خود اسکریپت پایتون خطاها را مدیریت می‌کند.
+      # - name: Wait 5 seconds
+      #   run: sleep 5
+
+      - name: 🏁 Flow completed successfully
+        run: echo "Flow finished successfully."
