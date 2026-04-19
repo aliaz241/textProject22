@@ -1,4 +1,4 @@
-name: Telegram bot sync
+name: Telegram bot sync # نام workflow تغییر کرد تا با اسم فایل مطابقت داشته باشه
 
 on:
   workflow_dispatch: # اجرای دستی
@@ -11,13 +11,13 @@ jobs:
 
     steps:
       - name: 🚀 Start Flow
-        run: echo "Starting Telegram to Rubika message sync flow..."
+        run: echo "Starting Telegram bot sync flow..."
 
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # استفاده از نسخه جدیدتر setup-python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -26,16 +26,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
-
       - name: Run Telegram Bot Script
         run: |
           echo "Running telegram_bot.py..."
           python telegram_bot.py
           echo "Script finished."
-    fi
 
-      # - name: Wait 5 seconds
-      #   run: sleep 5
+      - name: Verify data.json creation
+        run: |
+          echo "---- Verifying data.json ----"
+          if [ -f data.json ]; then
+            echo "data.json exists."
+            echo "Content preview (first 5 lines):"
+            head -n 5 data.json || echo "Could not read head of data.json"
+            echo "---- End of data.json verification ----"
+          else
+            echo "❗ ERROR: data.json was not created!"
+            exit 1
+          fi
+
+      - name: Check if data.json has content
+        run: |
+          echo "---- Checking if data.json is non-empty ----"
+          if [ -s data.json ]; then
+            echo "data.json is not empty. Content size: $(du -h data.json | cut -f1)"
+          else
+            echo "❗ ERROR: data.json is empty or has zero size!"
+            exit 1
+          fi
 
       - name: 🏁 Flow completed successfully
         run: echo "Flow finished successfully."
